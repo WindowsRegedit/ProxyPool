@@ -1,9 +1,5 @@
 # ProxyPool
 
-[![Publish Docker image](https://github.com/WindowsRegedit/ProxyPool/actions/workflows/docker-image.yml/badge.svg)](https://github.com/WindowsRegedit/ProxyPool/actions/workflows/docker-image.yml)
-
-
-
 简易高效的代理池，提供如下功能：
 
 - 定时抓取免费代理网站，简易可扩展。

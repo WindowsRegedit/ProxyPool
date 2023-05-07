@@ -1,4 +1,4 @@
-from flask import Flask, g, render_template, Blueprint, request
+from flask import Flask, g, render_template, Blueprint, redirect
 from flask_docs import ApiDoc
 from proxypool.storages.redis import RedisClient
 from proxypool.setting import API_HOST, API_PORT, API_THREADED, IS_DEV
@@ -37,7 +37,11 @@ def index():
     get home page, you can define your own templates
     :return:
     """
-    return render_template("index.html", PROXY_COUNT=str(get_conn().count()))
+    return render_template("docs.html")
+
+@app.route("/README.md")
+def readme():
+    return redirect("/static/README.md")
 
 
 @api.route('/random')
