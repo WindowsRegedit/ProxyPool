@@ -10,9 +10,7 @@
 name: Publish Docker image
 
 on:
-  push:
-    branches:
-    - main
+  push
 
 jobs:
   push_to_registries:
