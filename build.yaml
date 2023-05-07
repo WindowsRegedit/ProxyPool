@@ -7,7 +7,7 @@ services:
       - "6374:6379"
   proxypool:
     build: .
-    image: "germey/proxypool:master"
+    image: "winrtas/proxypool:main"
     container_name: proxypool
     ports:
       - "5555:5555"
