@@ -1,5 +1,4 @@
 from flask import Flask, g, render_template, Blueprint, redirect
-from flask_docs import ApiDoc
 from proxypool.storages.redis import RedisClient
 from proxypool.setting import API_HOST, API_PORT, API_THREADED, IS_DEV
 
@@ -7,15 +6,6 @@ from proxypool.setting import API_HOST, API_PORT, API_THREADED, IS_DEV
 __all__ = ['app']
 
 app = Flask(__name__)
-
-app.config["API_DOC_MEMBER"] = ["api", "platform"]
-
-ApiDoc(
-    app,
-    title="代理池系统",
-    version="1.0.0",
-    description="一个简易，易用的代理筛选系统",
-)
 api = Blueprint("api", __name__)
 if IS_DEV:
     app.debug = True
