@@ -5,7 +5,17 @@
 - 定时抓取免费代理网站，简易可扩展。
 - 使用 Redis 对代理进行存储并对代理可用性进行排序。
 - 定时测试和筛选，剔除不可用代理，留下可用代理。
-- 提供代理 API，随机取用测试通过的可用代理。
+- 提供代理 API，遵循RestFUL API风格，随机取用测试通过的可用代理。
+- 提供使用情况分析图表，简洁美观。
+
+<div style="position: relative; width: 100%; 
+    padding-top: calc(100% * 1080/ 1920); 
+    border: 2px white solid;">
+    <iframe src="/chart" title="ProxyPool Chart" 
+    style="position: absolute; width: 100%; height: 100%; top: 0;">
+    </iframe>
+</div>
+
 
 ## 使用准备
 
@@ -163,7 +173,7 @@ def get_random_proxy():
     get random proxy from proxypool
     :return: proxy
     """
-    return requests.get(proxypool_url).text.strip()
+    return requests.get(proxypool_url).json()["data"]
 
 def crawl(url, proxy):
     """
@@ -339,8 +349,6 @@ class Daili66Crawler(BaseCrawler):
 
 
 ## 待开发
-
-- [ ] 使用情况统计分析
 
 如有一起开发的兴趣可以在 Issue 留言，非常感谢！
 
