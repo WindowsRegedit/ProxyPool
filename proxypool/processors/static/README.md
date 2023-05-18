@@ -225,6 +225,19 @@ get random proxy 116.196.115.209:8080
 
 可以看到成功获取了代理，并请求 httpbin.org 验证了代理的可用性。
 
+## 启用鉴权（测试版）
+在环境变量中，设置 ENABLE_VERIFY 为 True，或在 proxypool/setting.py 中，将 ENABLE_VERIFY 的值改为 True
+
+启用鉴权后，所有 API 调用（除了“/api/token”, “/api/analyze” 两个）将会变成post请求，而请求中需要给出 token（在json中），token可以从 “/api/token” 获取，有效期 10 分钟（后期此api将会逐步变为用户登陆后才可获取token）
+post请求中，json数据如下所示：
+```json
+{
+  "token": "<put your token here>"
+}
+```
+
+
+
 ## 可配置项
 
 代理池可以通过设置环境变量来配置一些参数。

@@ -1,17 +1,20 @@
 # ProxyPool
 
-[![Publish Docker image](https://github.com/WindowsRegedit/ProxyPool/actions/workflows/docker-image.yml/badge.svg)](https://github.com/WindowsRegedit/ProxyPool/actions/workflows/docker-image.yml)
-
-
-
 简易高效的代理池，提供如下功能：
 
 - 定时抓取免费代理网站，简易可扩展。
 - 使用 Redis 对代理进行存储并对代理可用性进行排序。
 - 定时测试和筛选，剔除不可用代理，留下可用代理。
-- 提供代理 API，随机取用测试通过的可用代理。
+- 提供代理 API，遵循RestFUL API风格，随机取用测试通过的可用代理。
+- 提供使用情况分析图表，简洁美观。
+
 
 ## 使用准备
+
+### 对于新手
+从 Github Release 上下载最新的打包好的版本（.exe为安装版，.zip为便携版）
+使用 .exe 版：运行下载下来的程序即可。
+使用 .zip 版：解压后，运行里面的“ProxyPool.exe”即可
 
 首先当然是克隆代码并进入 ProxyPool 文件夹：
 
@@ -167,7 +170,7 @@ def get_random_proxy():
     get random proxy from proxypool
     :return: proxy
     """
-    return requests.get(proxypool_url).text.strip()
+    return requests.get(proxypool_url).json()["data"]
 
 def crawl(url, proxy):
     """
@@ -213,6 +216,19 @@ get random proxy 116.196.115.209:8080
 ```
 
 可以看到成功获取了代理，并请求 httpbin.org 验证了代理的可用性。
+
+## 启用鉴权（测试版）
+在环境变量中，设置 ENABLE_VERIFY 为 True，或在 proxypool/setting.py 中，将 ENABLE_VERIFY 的值改为 True
+
+启用鉴权后，所有 API 调用（除了“/api/token”, “/api/analyze” 两个）将会变成post请求，而请求中需要给出 token（在json中），token可以从 “/api/token” 获取，有效期 10 分钟（后期此api将会逐步变为用户登陆后才可获取token）
+post请求中，json数据如下所示：
+```json
+{
+  "token": "<put your token here>"
+}
+```
+
+
 
 ## 可配置项
 
@@ -343,8 +359,6 @@ class Daili66Crawler(BaseCrawler):
 
 
 ## 待开发
-
-- [ ] 使用情况统计分析
 
 如有一起开发的兴趣可以在 Issue 留言，非常感谢！
 

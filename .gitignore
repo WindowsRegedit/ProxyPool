@@ -6,3 +6,5 @@ venv
 *.log
 .DS_Store
 __pycache__
+api_usage.db
+logs

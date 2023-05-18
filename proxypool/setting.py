@@ -8,6 +8,8 @@ import shutil
 env = Env()
 env.read_env()
 
+# definition of verify
+ENABLE_VERIFY = env.bool('ENABLE_VERIFY', False)
 
 # definition of flags
 IS_WINDOWS = platform.system().lower() == 'windows'

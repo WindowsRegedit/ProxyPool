@@ -13,5 +13,6 @@ fake_headers
 maxminddb_geolite2
 gevent
 tornado
-itsdangerous
+itsdangerous==2.0.1
 MarkupSafe
+flask-httpauth
