@@ -16,4 +16,5 @@ tornado
 MarkupSafe
 flask-login
 flask-sqlalchemy
-itsdangerous==2.0.1
+itsdangerous
+pyjwt

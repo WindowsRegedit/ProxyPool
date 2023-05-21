@@ -1,17 +1,15 @@
-import uuid
 import datetime
+import sqlite3
+import uuid
+
+import jwt
 from flask import Flask, render_template, request, redirect, Blueprint, g, jsonify, url_for
-from flask_httpauth import HTTPBasicAuth
 from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 
-import sqlite3
-from proxypool.storages.redis import RedisClient
 from proxypool.setting import API_HOST, API_PORT, API_THREADED, IS_DEV, ENABLE_VERIFY
-from itsdangerous.jws import TimedJSONWebSignatureSerializer as Serializer
-from itsdangerous import SignatureExpired, BadSignature
-
+from proxypool.storages.redis import RedisClient
 
 __all__ = ['app']
 
@@ -30,20 +28,20 @@ db.init_app(app)
 with app.app_context():
     db.create_all()
 
+
 # 用户模型
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String, unique=True)
     password_hash = db.Column(db.String)
-    login_token = db.Column(db.String(255))
-
+    login_token = db.Column(db.String(255), unique=True)
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
 
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
-    
+
     def revoke_token(self):
         self.login_token = "pps-" + str(uuid.uuid4()).replace(":", "")
 
@@ -51,12 +49,12 @@ class User(UserMixin, db.Model):
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
-    
+
 
 def get_db():
-    db_analyze = sqlite3.connect(DATABASE)
-    db_analyze.row_factory = sqlite3.Row
-    return db_analyze
+    db_chart = sqlite3.connect(DATABASE)
+    db_chart.row_factory = sqlite3.Row
+    return db_chart
 
 
 def get_conn():
@@ -68,23 +66,26 @@ def get_conn():
         g.redis = RedisClient()
     return g.redis
 
+
 def verify(token=""):
     if not ENABLE_VERIFY:
         return True
-    s = Serializer(app.config['SECRET_KEY'])
     try:
-        token = s.loads(token)
+        token = jwt.decode(token, app.config["SECRET_KEY"], algorithms=["HS256"]).get("token")
         if not User.query.filter_by(login_token=token).first():
             raise RuntimeError
-    except (SignatureExpired, BadSignature, RuntimeError):
+    except (jwt.exceptions.InvalidSignatureError, RuntimeError):
         return False
     return True
-    
+
 
 db_analyze = get_db()
-db_analyze.execute('CREATE TABLE IF NOT EXISTS api_usage (date DATE PRIMARY KEY, count_random INTEGER, count_all INTEGER, count_count INTEGER)')
+db_analyze.execute(
+    'CREATE TABLE IF NOT EXISTS api_usage (date DATE PRIMARY KEY, count_random INTEGER, count_all INTEGER, '
+    'count_count INTEGER)')
 today = datetime.date.today().strftime("%Y %m")
-db_analyze.execute('INSERT OR IGNORE INTO api_usage (date, count_random, count_all, count_count) VALUES (?, ?, ?, ?)', (today, 0, 0, 0))
+db_analyze.execute('INSERT OR IGNORE INTO api_usage (date, count_random, count_all, count_count) VALUES (?, ?, ?, ?)',
+                   (today, 0, 0, 0))
 db_analyze.commit()
 
 
@@ -96,17 +97,21 @@ def index():
     """
     return render_template("docs.html")
 
+
 @app.route("/README.md")
 def readme():
     return redirect("/static/README.md")
+
 
 @app.route("/admin/README.md")
 def readme_admin():
     return redirect("/static/README-admin.md")
 
+
 @app.route("/chart")
 def chart():
     return render_template("chart.html")
+
 
 @api.route('/random', methods=["GET", "POST"])
 def get_proxy():
@@ -152,25 +157,31 @@ def get_count():
         return jsonify(json)
     return "Token Expired or Incorrect."
 
+
 @api.route("/token", methods=["POST"])
 def get_token():
     name = User.query.filter_by(username=request.json.get("name")).first()
     token = User.query.filter_by(login_token=request.json.get("login_token")).first()
     if name and token:
-        expires_in= request.json.get("expires_in", 600)
-        s = Serializer(app.config['SECRET_KEY'], expires_in=expires_in)
-        return jsonify({"status": "success", "token": s.dumps({"token": token.login_token}).decode()})
+        expires_in = request.json.get("expires_in", 600)
+        return jsonify({"status": "success", "token": jwt.encode(
+            {"token": token.login_token, "exp": datetime.datetime.now(tz=datetime.timezone.utc)
+                                                + datetime.timedelta(seconds=expires_in)}, app.config["SECRET_KEY"],
+            algorithm="HS256")})
     return "Error."
+
 
 @api.route('/analyze')
 def analyze():
     db_analyze = get_db()
-    rows = db_analyze.execute('SELECT date, count_random, count_all, count_count FROM api_usage ORDER BY date').fetchall()
+    rows = db_analyze.execute(
+        'SELECT date, count_random, count_all, count_count FROM api_usage ORDER BY date').fetchall()
     dates = [row['date'] for row in rows]
     count_random = [row['count_random'] for row in rows]
     count_all = [row['count_all'] for row in rows]
     count_count = [row['count_count'] for row in rows]
-    json = {"status": "success", "data": {"dates": dates, "count_random": count_random, "count_all": count_all, "count_count": count_count}}
+    json = {"status": "success",
+            "data": {"dates": dates, "count_random": count_random, "count_all": count_all, "count_count": count_count}}
     return jsonify(json)
 
 
@@ -184,7 +195,8 @@ def register():
         if user:
             return 'Username already exists!'
 
-        new_user = User(username=username)
+        new_user = User()
+        new_user.username = username
         new_user.set_password(password)
         new_user.revoke_token()
         db.session.add(new_user)
@@ -193,6 +205,7 @@ def register():
         return redirect(url_for('login'))
 
     return render_template('register.html')
+
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -210,11 +223,13 @@ def login():
 
     return render_template('login.html')
 
+
 @app.route('/logout')
 @login_required
 def logout():
     logout_user()
     return redirect(url_for('index'))
+
 
 @app.route('/admin')
 @login_required
@@ -222,6 +237,7 @@ def admin():
     name = current_user.username
     token = current_user.login_token
     return render_template('admin.html', name=name, token=token)
+
 
 app.register_blueprint(api, url_prefix="/api")
 

@@ -155,79 +155,25 @@ python3 run.py --processor server
 
 ## 使用
 
-成功运行之后可以通过 [http://localhost:5555/api/random](http://localhost:5555/api/random) 获取一个随机可用代理。
+首先，访问 /register 注册一个账号，登陆后，重定向到了 /admin 界面，保存好API用户名与API鉴权密码。
 
-可以用程序对接实现，下面的示例展示了获取代理并爬取网页的过程：
-
-```python
-import requests
-
-proxypool_url = 'http://127.0.0.1:5555/api/random'
-target_url = 'http://httpbin.org/get'
-
-def get_random_proxy():
-    """
-    get random proxy from proxypool
-    :return: proxy
-    """
-    return requests.get(proxypool_url).json()["data"]
-
-def crawl(url, proxy):
-    """
-    use proxy to crawl page
-    :param url: page url
-    :param proxy: proxy, such as 8.8.8.8:8888
-    :return: html
-    """
-    proxies = {'http': 'http://' + proxy}
-    return requests.get(url, proxies=proxies).text
-
-
-def main():
-    """
-    main method, entry point
-    :return: none
-    """
-    proxy = get_random_proxy()
-    print('get random proxy', proxy)
-    html = crawl(target_url, proxy)
-    print(html)
-
-if __name__ == '__main__':
-    main()
-```
-
-运行结果如下：
-
-```
-get random proxy 116.196.115.209:8080
-{
-  "args": {},
-  "headers": {
-    "Accept": "*/*",
-    "Accept-Encoding": "gzip, deflate",
-    "Host": "httpbin.org",
-    "User-Agent": "python-requests/2.22.0",
-    "X-Amzn-Trace-Id": "Root=1-5e4d7140-662d9053c0a2e513c7278364"
-  },
-  "origin": "116.196.115.209",
-  "url": "https://httpbin.org/get"
-}
-```
-
-可以看到成功获取了代理，并请求 httpbin.org 验证了代理的可用性。
-
-## 启用鉴权（测试版）
-在环境变量中，设置 ENABLE_VERIFY 为 True，或在 proxypool/setting.py 中，将 ENABLE_VERIFY 的值改为 True
-
-启用鉴权后，所有 API 调用（除了“/api/token”, “/api/analyze” 两个）将会变成post请求，而请求中需要给出 token（在json中），token可以从 “/api/token” 获取，有效期 10 分钟（后期此api将会逐步变为用户登陆后才可获取token）
-post请求中，json数据如下所示：
+然后，使用 POST 请求，访问 /api/token，给出以下信息：
 ```json
 {
-  "token": "<put your token here>"
+    "name": "admin",
+    "login_token": "<YOUR TOKEN HERE>",
+    "expires_in": <EXPIRATION TIME>
 }
 ```
+login_token替换为API鉴权密码，expires_in替换为你所需要用的临时令牌的时间，单位为秒（默认为600秒，10分钟）。
+不建议普通用户设置时间过长。
 
+然后，就可以使用请求得到的结果请求 ProxyPool，获取代理了。
+请求时，均需要使用 POST 请求，使用json，并且在数据中给出 "token" 这一项。
+API用法：
+/api/random 获取随机代理
+/api/all 获取所有可用代理
+/api/count 获取可用代理数
 
 
 ## 可配置项
