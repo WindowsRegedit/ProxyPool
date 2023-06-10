@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+{% block title %}ProxyPool System Manager{% endblock %}
+{% block body %}
+  <div class="modal fade" id="creat-usr" tabindex="-1" aria-labelledby="creat-usr" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form action="/new-usr" method="POST" id="form">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="deleteUsrLabel">创建用户</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+          <div class="form-floating mb-3">
+              <input type="text" class="form-control" id="enter_usrname" name="enter_usrname" placeholder="输入用户名" required>
+              <label for="enter_usrname">输入用户名</label>
+          </div>
+          <div class="form-floating mb-3">
+              <input type="password" class="form-control" id="password" name="password" placeholder="密码" required>
+              <label for="password">密码</label>
+          </div>
+          <div class="form-floating mb-3">
+              <input type="password" class="form-control" id="confirm_password" name="confirm_password" placeholder="确认密码" required>
+              <label for="confirm_password">确认密码</label>
+          </div>
+          <h4>生成的用户为：</h4>
+          <div class="form-check">
+          <input class="form-check-input" type="checkbox" name="EnableAdminPermission" id="EnableAdminPermission">
+          <label class="form-check-label" for="EnableAdminPermission">
+            启用管理员权限
+          </label>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">关闭</button>
+        <button type="submit" class="btn btn-outline-anger">创建用户</button>
+      </div>
+      </form>
+    </div>
+  </div>
+</div>
+    <div role="main" style="margin-left: 20%;margin-right: 20%;">
+        <h3>ProxyPool System Manager</h3>
+        <p></p>
+        <div class="accordion" id="accordion">
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseUsr" aria-expanded="true" aria-controls="collapseUSR">
+                    身份信息
+                    </button>
+                </h2>
+                <div id="collapseUsr" class="accordion-collapse collapse show" data-bs-parent="#accordion">
+                  <div class="accordion-body">
+                        <h5>登录用户名：<strong>{{ current_user.username }}</strong></h5>
+                        <p></p>
+                        <h5>登录令牌：<strong>{{ current_user.login_token }}</strong></h5>
+                        <p></p>
+                        <a href="/api/revoke_token">重置令牌</a>
+                        <iframe src="/api/analyze"></iframe>
+
+                        <a href="/logout">登出</a>
+                  </div>
+                </div>
+            </div>
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                  <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseUsrInfo" aria-expanded="true" aria-controls="collapseUsrInfo">
+                    用户信息
+                  </button>
+                </h2>
+                <div id="collapseUsrInfo" class="accordion-collapse collapse show" data-bs-parent="#accordion">
+                  <div class="accordion-body">
+                      <button type="button" class="btn btn-outline-info" data-bs-toggle="modal" data-bs-target="#creat-usr" style="float: right;">新建用户</button>
+                      <table class="table">
+                          <thead>
+                            <tr>
+                              <th scope="col">用户ID</th>
+                              <th scope="col">用户名</th>
+                              <th scope="col">随机代理调用次数</th>
+                              <th scope="col">可用代理查询次数</th>
+                              <th scope="col">可用代理数量查询次数</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {% for user in users %}
+                                <tr>
+                                <th scope="row">{{ user.id }}</th>
+                                    <td><a href="/info/{{ user.id }}" data-bs-toggle="tooltip" data-bs-title="查看此用户详细信息">{{ user.username }}</a></td>
+                                <td>{{ user.random_analyze }}</td>
+                                <td>{{ user.count_analyze }}</td>
+                                <td>{{ user.all_analyze }}</td>
+                                </tr>
+                            {% endfor %}
+                          </tbody>
+                      </table>
+              </div>
+            </div>
+        </div>
+        </div>
+k
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous"></script>
+    <script>
+        const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+        const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+    </script>
+{% endblock %}

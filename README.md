@@ -11,20 +11,6 @@
 
 ## 使用准备
 
-### 对于新手
-从 Github Release 上下载最新的打包好的版本（.exe为安装版，.zip为便携版）
-使用 .exe 版：运行下载下来的程序即可。
-使用 .zip 版：解压后，运行里面的“ProxyPool.exe”即可
-
-首先当然是克隆代码并进入 ProxyPool 文件夹：
-
-```
-git clone https://github.com/WindowsRegedit/ProxyPool.git
-cd ProxyPool
-```
-
-然后选用下面 Docker 和常规方式任意一个执行即可。
-
 ## 使用要求
 
 可以通过两种方式来运行代理池，一种方式是使用 Docker（推荐），另一种方式是常规方式运行，要求如下：
@@ -73,8 +59,6 @@ proxypool        | 2023-05-07 10:19:12.188 | DEBUG    | proxypool.processors.tes
 
 可以看到 Redis、Getter、Server、Tester 都已经启动成功。
 
-这时候访问 [http://localhost:5555/api/random](http://localhost:5555/api/random) 即可获取一个随机可用代理。
-
 当然你也可以选择自己 Build，直接运行如下命令即可：
 
 ```
@@ -85,7 +69,7 @@ docker-compose -f build.yaml up
 
 ```diff
 - RUN pip install -r requirements.txt
-+ RUN pip install -r requirements.txt -i https://pypi.douban.com/simple
++ RUN pip install -r requirements.txt -i https://pypi.tuna.tsinghua.edu.cn/simple some-package
 ```
 
 ## 常规方式运行
@@ -131,6 +115,12 @@ export PROXYPOOL_REDIS_CONNECTION_STRING='redis://localhost'
 pip3 install -r requirements.txt
 ```
 
+当然这里也是可以加速的：
+```diff
+- pip3 install -r requirements.txt
++ pip3 install -r requirements.txt -i https://pypi.tuna.tsinghua.edu.cn/simple some-package
+```
+
 ### 运行代理池
 
 两种方式运行代理池，一种是 Tester、Getter、Server 全部运行，另一种是按需分别运行。
@@ -140,8 +130,6 @@ pip3 install -r requirements.txt
 ```shell script
 python3 run.py
 ```
-
-运行之后会启动 Tester、Getter、Server，这时访问 [http://localhost:5555/api/random](http://localhost:5555/api/random) 即可获取一个随机可用代理。
 
 或者如果你弄清楚了代理池的架构，可以按需分别运行，命令如下：
 
@@ -157,23 +145,7 @@ python3 run.py --processor server
 
 首先，访问 /register 注册一个账号，登陆后，重定向到了 /admin 界面，保存好API用户名与API鉴权密码。
 
-然后，使用 POST 请求，访问 /api/token，给出以下信息：
-```json
-{
-    "name": "admin",
-    "login_token": "<YOUR TOKEN HERE>",
-    "expires_in": <EXPIRATION TIME>
-}
-```
-login_token替换为API鉴权密码，expires_in替换为你所需要用的临时令牌的时间，单位为秒（默认为600秒，10分钟）。
-不建议普通用户设置时间过长。
-
-然后，就可以使用请求得到的结果请求 ProxyPool，获取代理了。
-请求时，均需要使用 POST 请求，使用json，并且在数据中给出 "token" 这一项。
-API用法：
-/api/random 获取随机代理
-/api/all 获取所有可用代理
-/api/count 获取可用代理数
+这里具体的 API 调用涉及到获取临时登录 token 与 token 过期时间等问题，在此不详细赘述，完整的 API 文档在首页，或访问目录下的 static 文件夹下的 ``ProxyPoolSystem.openapi.json`` 并将此文件导入到 ApiFox 或 Postman 中。
 
 
 ## 可配置项
@@ -311,3 +283,15 @@ class Daili66Crawler(BaseCrawler):
 ## LICENSE
 
 MIT
+
+
+## 更新日志
+### ProxyPool System 2.0
+第一个正式发布的大版本！
+相比于原版，有了这些改动：
+ - 用户管理/管理员配置
+ - 管理员资源分配
+ - 清晰的文档
+ - 好看的UI
+……
+等等……

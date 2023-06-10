@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>Statistic</title>
+    <!-- Import style -->
+    <link rel="stylesheet" href="//unpkg.com/element-plus/dist/index.css" />
+    <!-- Import Vue 3 -->
+    <script src="//unpkg.com/vue@3"></script>
+    <!-- Import component library -->
+    <script src="//unpkg.com/element-plus"></script>
+    <script src="//unpkg.com/@element-plus/icons-vue"></script>
+</head>
+<body>
+<div id="app">
+<el-row>
+    <el-col :span="8">
+      <el-statistic title="随机代理调用次数" :value="{{ random_analyze }}" />
+    </el-col>
+    <el-col :span="8">
+      <el-statistic title="可用代理查询次数" :value="{{ all_analyze }}" />
+    </el-col>
+    <el-col :span="8">
+      <el-statistic title="可用代理数量查询次数" :value="{{ count_analyze }}" />
+    </el-col>
+</el-row>
+</div>
+<style>
+.el-col {
+  text-align: center;
+}
+</style>
+<script>
+  const App = {};
+  const app = Vue.createApp(App);
+  app.use(ElementPlus);
+  app.mount("#app");
+</script>
+</body>
+</html>

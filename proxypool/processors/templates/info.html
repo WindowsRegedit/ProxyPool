@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+{% block title %}ProxyPool System Manager{% endblock %}
+{% block body %}
+<div class="modal fade" id="reset-pwd" tabindex="-1" aria-labelledby="reset-pwd" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form action="{{ url_for('info', id=str(user.id)) }}" method="POST" id="form">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="resetPwdLabel">重置密码</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+          警告：<h5 style="color: red;">重置密码后，可能会让用户无法访问登陆界面，且无法撤销操作，请务必小心谨慎！</h5>
+          <div class="form-floating mb-3">
+              <input type="password" class="form-control" id="password" name="password" placeholder="修改密码" required>
+              <label for="password">密码</label>
+          </div>
+          <input type="hidden" value="setpwd" name="method">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">关闭</button>
+        <button type="submit" class="btn btn-outline-danger">保存修改</button>
+      </div>
+      </form>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="delete-usr" tabindex="-1" aria-labelledby="delete-usr" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form action="{{ url_for('info', id=str(user.id)) }}" method="POST" id="form">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="deleteUsrLabel">删除用户</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+          警告：<h5 style="color: red;">删除用户后，会让用户无法访问登陆界面，且无法撤销操作，请务必小心谨慎！</h5>
+          <input type="hidden" value="delusr" name="method">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">关闭</button>
+        <button type="submit" class="btn btn-outline-danger">保存修改</button>
+      </div>
+      </form>
+    </div>
+  </div>
+</div>
+    <div role="main" style="margin-left: 20%;margin-right: 20%;">
+        <h3>ProxyPool System Manager</h3>
+        <p></p>
+        <div class="accordion" id="accordion">
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseUsr" aria-expanded="true" aria-controls="collapseUSR">
+                    身份信息
+                    </button>
+                </h2>
+                <div id="collapseUsr" class="accordion-collapse collapse show" data-bs-parent="#accordion">
+                  <div class="accordion-body">
+                        <h5>登录用户名：<strong>{{ user.username }}</strong>  <i class="bi bi-arrow-clockwise"></i></h5>
+                        <p></p>
+                        <h5>登录令牌：<strong>{{ user.login_token }}</strong></h5>
+                        <p></p>
+                        <h5>登录密码哈希值：<strong>{{ user.password_hash[7:30] }}...</strong></h5>
+                        <p></p>
+                      <form action="{{ url_for('info', id=str(user.id)) }}" method="POST">
+                          <input type="hidden" value="revtk" name="method">
+                          <button type="submit" class="btn btn-outline-danger">重置此用户登录令牌</button>
+                      </form>
+                      <p></p>
+                        <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#reset-pwd">重置此用户密码</button>
+                       <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#delete-usr">删除此用户</button>
+                  </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+{% endblock %}
