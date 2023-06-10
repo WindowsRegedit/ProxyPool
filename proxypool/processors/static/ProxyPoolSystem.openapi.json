@@ -1,0 +1,328 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "ProxyPool System",
+    "description": "",
+    "version": "1.0.0"
+  },
+  "tags": [],
+  "paths": {
+    "/api/token": {
+      "post": {
+        "summary": "获取登录token",
+        "x-apifox-folder": "",
+        "x-apifox-status": "developing",
+        "deprecated": false,
+        "description": "",
+        "tags": [],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "title": "用户名"
+                  },
+                  "login_token": {
+                    "type": "string",
+                    "title": "登录令牌"
+                  },
+                  "expires_in": {
+                    "type": "integer",
+                    "title": "临时密码过期时间"
+                  }
+                },
+                "x-apifox-orders": [
+                  "name",
+                  "login_token",
+                  "expires_in"
+                ],
+                "required": [
+                  "name",
+                  "login_token"
+                ],
+                "x-apifox-ignore-properties": []
+              },
+              "example": {
+                "name": "admin",
+                "login_token": "pps-",
+                "expires_in": 600
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "title": "接口返回状态"
+                    },
+                    "token": {
+                      "type": "string",
+                      "title": "生成的临时登录密码"
+                    }
+                  },
+                  "x-apifox-orders": [
+                    "status",
+                    "token"
+                  ],
+                  "required": [
+                    "status",
+                    "token"
+                  ],
+                  "x-apifox-ignore-properties": []
+                },
+                "examples": {
+                  "1": {
+                    "summary": "成功示例",
+                    "value": {
+                      "status": "success",
+                      "token": "<Temporary Password>"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox": "https://www.apifox.cn/web/project/2761256/apis/api-83328215-run"
+      }
+    },
+    "/api/random": {
+      "post": {
+        "summary": "获取随机代理",
+        "x-apifox-folder": "",
+        "x-apifox-status": "developing",
+        "deprecated": false,
+        "description": "",
+        "tags": [],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "token": {
+                    "type": "string",
+                    "title": "临时登录密码"
+                  }
+                },
+                "x-apifox-orders": [
+                  "token"
+                ],
+                "required": [
+                  "token"
+                ],
+                "x-apifox-ignore-properties": []
+              },
+              "example": {
+                "token": ""
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "string",
+                      "title": "获取随机代理s"
+                    },
+                    "status": {
+                      "type": "string",
+                      "title": "接口返回状态"
+                    }
+                  },
+                  "required": [
+                    "data",
+                    "status"
+                  ],
+                  "x-apifox-orders": [
+                    "data",
+                    "status"
+                  ],
+                  "x-apifox-ignore-properties": []
+                },
+                "examples": {
+                  "1": {
+                    "summary": "成功",
+                    "value": {
+                      "data": "1.1.1.1:1234",
+                      "status": "success"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox": "https://www.apifox.cn/web/project/2761256/apis/api-83328536-run"
+      }
+    },
+    "/api/count": {
+      "post": {
+        "summary": "获取可用代理数量",
+        "x-apifox-folder": "",
+        "x-apifox-status": "developing",
+        "deprecated": false,
+        "description": "",
+        "tags": [],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "token": {
+                    "type": "string",
+                    "title": "临时登录密码"
+                  }
+                },
+                "x-apifox-orders": [
+                  "token"
+                ],
+                "required": [
+                  "token"
+                ],
+                "x-apifox-ignore-properties": []
+              },
+              "example": {
+                "token": ""
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "integer",
+                      "title": "可用代理数量"
+                    },
+                    "status": {
+                      "type": "string",
+                      "title": "接口返回状态"
+                    }
+                  },
+                  "required": [
+                    "data",
+                    "status",
+                    "01H11S0G4B2NASBKY96Q7J884X"
+                  ],
+                  "x-apifox-orders": [
+                    "01H11S0G4B2NASBKY96Q7J884X",
+                    "data",
+                    "status"
+                  ],
+                  "x-apifox-ignore-properties": []
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox": "https://www.apifox.cn/web/project/2761256/apis/api-83328561-run"
+      }
+    },
+    "/api/all": {
+      "post": {
+        "summary": "获取所有可用代理",
+        "x-apifox-folder": "",
+        "x-apifox-status": "developing",
+        "deprecated": false,
+        "description": "",
+        "tags": [],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "token": {
+                    "type": "string",
+                    "title": "临时登录密码"
+                  }
+                },
+                "x-apifox-orders": [
+                  "token"
+                ],
+                "required": [
+                  "token"
+                ],
+                "x-apifox-ignore-properties": []
+              },
+              "example": {
+                "token": ""
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "title": "接口返回状态"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "title": "所有可用代理"
+                    }
+                  },
+                  "x-apifox-orders": [
+                    "status",
+                    "data"
+                  ],
+                  "required": [
+                    "status",
+                    "data"
+                  ],
+                  "x-apifox-ignore-properties": []
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox": "https://www.apifox.cn/web/project/2761256/apis/api-83328580-run"
+      }
+    }
+  },
+  "components": {
+    "schemas": {}
+  },
+  "servers": [
+    {
+      "url": "http://127.0.0.1:5555",
+      "description": "本地测试环境"
+    }
+  ]
+}
