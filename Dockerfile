@@ -1,11 +1,11 @@
-FROM python:3.9-alpine AS build
+FROM python:3.11-alpine AS build
 COPY requirements.txt .
 RUN apk update &&\
     apk add --no-cache gcc g++ libffi-dev openssl-dev libxml2-dev libxslt-dev build-base musl-dev &&\
     pip install -U pip &&\
     pip install --timeout 30 --user --no-cache-dir --no-warn-script-location --extra-index-url https://alpine-wheels.github.io/index -r requirements.txt
 
-FROM python:3.9-alpine
+FROM python:3.11-alpine
 ENV APP_ENV=prod
 ENV LOCAL_PKG="/root/.local"
 COPY --from=build ${LOCAL_PKG} ${LOCAL_PKG}
