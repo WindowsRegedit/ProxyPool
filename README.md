@@ -59,6 +59,14 @@ proxypool        | 2023-05-07 10:19:12.188 | DEBUG    | proxypool.processors.tes
 
 可以看到 Redis、Getter、Server、Tester 都已经启动成功。
 
+或者在没有 / 不用 docker-compose 的情况下，可以用 docker run ，同样是一行代码：
+
+```shell script
+docker run --name proxypool -p 8080:5555 -e PROXYPOOL_REDIS_HOST=redis4proxypool redis:alpine winrtas/proxypool:main
+```
+
+将这里的 8080 改为你需要的端口（如 5555 ）后，直接运行即可。
+
 当然你也可以选择自己 Build，直接运行如下命令即可：
 
 ```
@@ -230,6 +238,9 @@ services:
       TEST_URL: http://weibo.cn
       REDIS_KEY: proxies:weibo
 ```
+
+
+同理，使用 docker run 的，也可以在 -e 后面加环境变量。 
 
 ## 扩展代理爬虫
 

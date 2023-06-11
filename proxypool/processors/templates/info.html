@@ -4,7 +4,7 @@
 <div class="modal fade" id="reset-pwd" tabindex="-1" aria-labelledby="reset-pwd" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
-      <form action="{{ url_for('info', id=str(user.id)) }}" method="POST" id="form">
+      <form action="{{ url_for('user_info', id=user.id) }}" method="POST" id="form">
       <div class="modal-header">
         <h1 class="modal-title fs-5" id="resetPwdLabel">重置密码</h1>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -28,7 +28,7 @@
 <div class="modal fade" id="delete-usr" tabindex="-1" aria-labelledby="delete-usr" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
-      <form action="{{ url_for('info', id=str(user.id)) }}" method="POST" id="form">
+      <form action="{{ url_for('user_info', id=user.id) }}" method="POST" id="form">
       <div class="modal-header">
         <h1 class="modal-title fs-5" id="deleteUsrLabel">删除用户</h1>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -63,7 +63,7 @@
                         <p></p>
                         <h5>登录密码哈希值：<strong>{{ user.password_hash[7:30] }}...</strong></h5>
                         <p></p>
-                      <form action="{{ url_for('info', id=str(user.id)) }}" method="POST">
+                      <form action="{{ url_for('user_info', id=user.id) }}" method="POST">
                           <input type="hidden" value="revtk" name="method">
                           <button type="submit" class="btn btn-outline-danger">重置此用户登录令牌</button>
                       </form>

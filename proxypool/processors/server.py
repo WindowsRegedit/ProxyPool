@@ -116,7 +116,7 @@ def get_proxy():
         user = User.query.filter_by(login_token=verify(request.json.get("token"))).first()
         user.random_analyze += 1
         return jsonify(json)
-    return "Token Expired or Incorrect."
+    return jsonify({"status": "failed", "reason": "Token expired or incorrect."}), 400
 
 
 @api.route('/all', methods=["POST"])
@@ -132,7 +132,7 @@ def get_proxy_all():
         user = User.query.filter_by(login_token=verify(request.json.get("token"))).first()
         user.all_analyze += 1
         return jsonify(json)
-    return jsonify({"status": "failed", "reason": "Token expired or incorrect."})
+    return jsonify({"status": "failed", "reason": "Token expired or incorrect."}), 400
 
 
 @api.route('/count', methods=["POST"])
@@ -143,7 +143,7 @@ def get_count():
         user = User.query.filter_by(login_token=verify(request.json.get("token"))).first()
         user.count_analyze += 1
         return jsonify(json)
-    return jsonify({"status": "failed", "reason": "Token expired or incorrect."})
+    return jsonify({"status": "failed", "reason": "Token expired or incorrect."}), 400
 
 
 @api.route("/token", methods=["POST"])
@@ -157,7 +157,7 @@ def get_token():
                                                 + datetime.timedelta(seconds=expires_in)}, app.config["SECRET_KEY"],
             algorithm="HS256")})
     return jsonify({"status": "failed", "reason": "Given username or temporary password is invalid or Server-Side "
-                                                  "Error."})
+                                                  "Error."}), 400
 
 
 @api.route('/analyze')
@@ -231,7 +231,7 @@ def admin():
         elif request.form.get('method') == "revtk":
             load_user(int(id)).revoke_token()
             db.session.commit()
-            return redirect(url_for("info", id=str(id)))
+            return redirect(url_for("user_info", id=str(id)))
         elif request.form.get('method') == "delusr":
             db.session.delete(load_user(int(id)))
             db.session.commit()
@@ -261,11 +261,11 @@ def user_info(id):
             password = request.form.get('password')
             load_user(int(id)).set_password(password)
             db.session.commit()
-            return redirect(url_for("info", id=str(id)))
+            return redirect(url_for("user_info", id=str(id)))
         elif request.form.get('method') == "revtk":
             load_user(int(id)).revoke_token()
             db.session.commit()
-            return redirect(url_for("info", id=str(id)))
+            return redirect(url_for("user_info", id=str(id)))
         elif request.form.get('method') == "delusr":
             db.session.delete(load_user(int(id)))
             db.session.commit()

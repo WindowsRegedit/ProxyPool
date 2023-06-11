@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "info": {
     "title": "ProxyPool System",
-    "description": "",
+    "description": "ProxyPool System API",
     "version": "1.0.0"
   },
   "tags": [],
@@ -11,7 +11,7 @@
       "post": {
         "summary": "获取登录token",
         "x-apifox-folder": "",
-        "x-apifox-status": "developing",
+        "x-apifox-status": "released",
         "deprecated": false,
         "description": "",
         "tags": [],
@@ -92,6 +92,44 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "请求有误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "title": "请求状态"
+                    },
+                    "reason": {
+                      "type": "string",
+                      "title": "失败原因"
+                    }
+                  },
+                  "x-apifox-orders": [
+                    "status",
+                    "reason"
+                  ],
+                  "required": [
+                    "status",
+                    "reason"
+                  ],
+                  "x-apifox-ignore-properties": []
+                },
+                "examples": {
+                  "1": {
+                    "summary": "异常示例",
+                    "value": {
+                      "status": "failed",
+                      "reason": "Given username or temporary password is invalid or Server-Side Error."
+                    }
+                  }
+                }
+              }
+            }
           }
         },
         "x-run-in-apifox": "https://www.apifox.cn/web/project/2761256/apis/api-83328215-run"
@@ -101,7 +139,7 @@
       "post": {
         "summary": "获取随机代理",
         "x-apifox-folder": "",
-        "x-apifox-status": "developing",
+        "x-apifox-status": "released",
         "deprecated": false,
         "description": "",
         "tags": [],
@@ -169,6 +207,44 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "请求有误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "description": "请求状态"
+                    },
+                    "reason": {
+                      "type": "string",
+                      "description": "失败原因"
+                    }
+                  },
+                  "x-apifox-orders": [
+                    "status",
+                    "reason"
+                  ],
+                  "required": [
+                    "status",
+                    "reason"
+                  ],
+                  "x-apifox-ignore-properties": []
+                },
+                "examples": {
+                  "1": {
+                    "summary": "异常示例",
+                    "value": {
+                      "status": "failed",
+                      "reason": "Token expired or incorrect."
+                    }
+                  }
+                }
+              }
+            }
           }
         },
         "x-run-in-apifox": "https://www.apifox.cn/web/project/2761256/apis/api-83328536-run"
@@ -178,7 +254,7 @@
       "post": {
         "summary": "获取可用代理数量",
         "x-apifox-folder": "",
-        "x-apifox-status": "developing",
+        "x-apifox-status": "released",
         "deprecated": false,
         "description": "",
         "tags": [],
@@ -239,6 +315,44 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "请求有误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "description": "请求状态"
+                    },
+                    "reason": {
+                      "type": "string",
+                      "description": "失败原因"
+                    }
+                  },
+                  "x-apifox-orders": [
+                    "status",
+                    "reason"
+                  ],
+                  "required": [
+                    "status",
+                    "reason"
+                  ],
+                  "x-apifox-ignore-properties": []
+                },
+                "examples": {
+                  "1": {
+                    "summary": "异常示例",
+                    "value": {
+                      "status": "failed",
+                      "reason": "Token expired or incorrect."
+                    }
+                  }
+                }
+              }
+            }
           }
         },
         "x-run-in-apifox": "https://www.apifox.cn/web/project/2761256/apis/api-83328561-run"
@@ -248,7 +362,7 @@
       "post": {
         "summary": "获取所有可用代理",
         "x-apifox-folder": "",
-        "x-apifox-status": "developing",
+        "x-apifox-status": "released",
         "deprecated": false,
         "description": "",
         "tags": [],
@@ -310,6 +424,44 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "请求有误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "description": "请求状态"
+                    },
+                    "reason": {
+                      "type": "string",
+                      "description": "失败原因"
+                    }
+                  },
+                  "x-apifox-orders": [
+                    "status",
+                    "reason"
+                  ],
+                  "required": [
+                    "status",
+                    "reason"
+                  ],
+                  "x-apifox-ignore-properties": []
+                },
+                "examples": {
+                  "1": {
+                    "summary": "异常示例",
+                    "value": {
+                      "status": "failed",
+                      "reason": "Token expired or incorrect."
+                    }
+                  }
+                }
+              }
+            }
           }
         },
         "x-run-in-apifox": "https://www.apifox.cn/web/project/2761256/apis/api-83328580-run"
@@ -322,7 +474,7 @@
   "servers": [
     {
       "url": "http://127.0.0.1:5555",
-      "description": "本地测试环境"
+      "description": "测试环境"
     }
   ]
 }
